@@ -1,0 +1,29 @@
+RewriteEngine On
+
+# Handle CORS preflight OPTIONS requests
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Route API requests to PHP files
+# POST /api/register-candidate -> /api/register-candidate.php
+RewriteRule ^api/register-candidate$ api/register-candidate.php [L,QSA]
+
+# POST /api/admin/login -> /api/admin/login.php
+RewriteRule ^api/admin/login$ api/admin/login.php [L,QSA]
+
+# GET /api/admin/stats -> /api/admin/stats.php  
+RewriteRule ^api/admin/stats$ api/admin/stats.php [L,QSA]
+
+# GET /api/admin/download-applicants -> /api/admin/download-applicants.php
+RewriteRule ^api/admin/download-applicants$ api/admin/download-applicants.php [L,QSA]
+
+# Deny access to sensitive files
+<FilesMatch "\.(env|env\.example)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Deny access to config directory
+<IfModule mod_rewrite.c>
+    RewriteRule ^config/ - [F,L]
+</IfModule>

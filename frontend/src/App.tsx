@@ -35,7 +35,7 @@ export default function App() {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/register-candidate', payload);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register-candidate.php`, payload);
       if (response.data.success) {
         setShowSuccessPopup(true);
         setAcceptedTerms(false);
@@ -44,7 +44,7 @@ export default function App() {
         });
       }
     } catch (err) {
-      alert('Connection error. Check that your Node API server is alive on port 5000.');
+      alert('Connection error. Check that the backend server & MySQL are running.');
     }
   };
 

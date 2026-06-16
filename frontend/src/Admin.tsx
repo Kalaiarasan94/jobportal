@@ -9,7 +9,7 @@ export default function Admin() {
 
   const fetchDashboardStats = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/stats');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/stats.php`);
       setStats(response.data);
     } catch (err) {
       alert('Error fetching tracking statistics.');
@@ -23,7 +23,7 @@ export default function Admin() {
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/login', { username, password });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/login.php`, { username, password });
       if (response.data.success) { setIsAuthenticated(true); }
     } catch (err) {
       alert('❌ Access Denied: Invalid Username or Password.');
@@ -73,7 +73,7 @@ export default function Admin() {
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Spreadsheet Extraction</span>
               <p className="text-[11px] text-slate-400 mt-1">Download candidate historical lists structured clean with separate city values.</p>
             </div>
-            <a href="http://localhost:5000/api/admin/download-applicants" className="w-full text-center mt-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl transition shadow-md shadow-emerald-700/20">📥 Extract Master Excel (.xlsx)</a>
+            <a href={`${import.meta.env.VITE_API_URL}/api/admin/download-applicants.php`} className="w-full text-center mt-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl transition shadow-md shadow-emerald-700/20">📥 Extract Master Excel (.xlsx)</a>
           </div>
         </div>
 
