@@ -1,29 +1,33 @@
 RewriteEngine On
 
-# Handle CORS preflight OPTIONS requests
-RewriteCond %{REQUEST_METHOD} OPTIONS
-RewriteRule ^(.*)$ $1 [R=200,L]
+# NOTE: CORS preflight (OPTIONS) is handled inside PHP (config/cors.php) so the
+# Access-Control-* headers are always set. Do not short-circuit OPTIONS here.
 
-# Route API requests to PHP files
-# POST /api/register-candidate -> /api/register-candidate.php
-RewriteRule ^api/register-candidate$ api/register-candidate.php [L,QSA]
+# ---- Extensionless API routes -------------------------------------------
+# Public
+RewriteRule ^api/config$                  api/config.php               [L,QSA]
+RewriteRule ^api/register$                api/register.php             [L,QSA]
 
-# POST /api/admin/login -> /api/admin/login.php
-RewriteRule ^api/admin/login$ api/admin/login.php [L,QSA]
+# Admin
+RewriteRule ^api/admin/login$             api/admin/login.php          [L,QSA]
+RewriteRule ^api/admin/registrations$     api/admin/registrations.php  [L,QSA]
+RewriteRule ^api/admin/approve$           api/admin/approve.php        [L,QSA]
+RewriteRule ^api/admin/image$             api/admin/image.php          [L,QSA]
+RewriteRule ^api/admin/idcard$            api/admin/idcard.php         [L,QSA]
+RewriteRule ^api/admin/export-excel$      api/admin/export-excel.php   [L,QSA]
+RewriteRule ^api/admin/export-pdf$        api/admin/export-pdf.php     [L,QSA]
 
-# GET /api/admin/stats -> /api/admin/stats.php  
-RewriteRule ^api/admin/stats$ api/admin/stats.php [L,QSA]
-
-# GET /api/admin/download-applicants -> /api/admin/download-applicants.php
-RewriteRule ^api/admin/download-applicants$ api/admin/download-applicants.php [L,QSA]
-
-# Deny access to sensitive files
+# ---- Protect sensitive paths --------------------------------------------
 <FilesMatch "\.(env|env\.example)$">
-    Order Allow,Deny
-    Deny from all
+    Require all denied
 </FilesMatch>
 
-# Deny access to config directory
-<IfModule mod_rewrite.c>
-    RewriteRule ^config/ - [F,L]
-</IfModule>
+RewriteRule ^config/  - [F,L]
+RewriteRule ^lib/     - [F,L]
+RewriteRule ^assets/fonts/ - [F,L]
+
+# Uploaded payment screenshots are only served through payment-image.php,
+# which checks the admin token first.
+RewriteRule ^uploads/ - [F,L]
+
+Options -Indexes

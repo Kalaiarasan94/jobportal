@@ -23,8 +23,17 @@ function setCorsHeaders(): void {
     }
 
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+    // Reflect whatever custom headers the browser asks for in its preflight
+    // (e.g. X-Admin-Token) so we never have to keep this list in sync.
+    $requested = $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'] ?? '';
+    $allowHeaders = $requested !== ''
+        ? $requested
+        : 'Content-Type, Authorization, X-Requested-With, X-Admin-Token';
+    header('Access-Control-Allow-Headers: ' . $allowHeaders);
+
     header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 600');
     header('Content-Type: application/json; charset=UTF-8');
 
     // Handle preflight OPTIONS requests

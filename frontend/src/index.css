@@ -1,1 +1,118 @@
 @import "tailwindcss";
+
+/* Palette taken from the JCI mark: deep navy wordmark, blue and teal shield. */
+@theme {
+  --color-navy: #1b1b3a;
+  --color-navy-800: #26264e;
+  --color-navy-700: #33335f;
+  --color-brand: #1b9ad6;
+  --color-brand-dark: #157fb4;
+  --color-brand-soft: #eaf4fb;
+  --color-teal: #4fc3c0;
+  --color-teal-dark: #2f9e9b;
+  --color-ink: #243044;
+  --color-muted: #8593a8;
+  --color-hair: #e2eaf3;
+
+  --animate-splash-pop: splash-pop 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-splash-rise: splash-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-sweep: sweep 1.6s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-pop-in: pop-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-float-slow: float-slow 9s ease-in-out infinite;
+  --animate-float-slower: float-slow 13s ease-in-out infinite;
+  --animate-shimmer: shimmer 3.2s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-bob: bob 3s ease-in-out infinite;
+}
+
+@keyframes splash-pop {
+  0%   { opacity: 0; transform: scale(0.82) translateY(14px); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes splash-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(320%); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(14px, -18px) scale(1.06); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.7; }
+  70%  { transform: scale(1.9); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* Staggered entrance for form fields — set --i on each item. */
+.stagger {
+  animation: fade-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Animated brand gradient text (hero fee, headings). */
+.shimmer-text {
+  background: linear-gradient(100deg, #1b9ad6 20%, #4fc3c0 40%, #1b9ad6 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3.2s linear infinite;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Native date inputs render a tiny grey icon — make it a clearer target. */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.55;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

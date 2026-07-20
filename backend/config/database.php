@@ -14,7 +14,7 @@ function getDBConnection(): PDO {
     $port = getenv('DB_PORT') ?: '3306';
     $user = getenv('DB_USER') ?: 'root';
     $pass = getenv('DB_PASSWORD') ?: '';
-    $db   = getenv('DB_NAME') ?: 'job';
+    $db   = getenv('DB_NAME') ?: 'epsjci';
 
     try {
         $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
@@ -25,10 +25,13 @@ function getDBConnection(): PDO {
         ]);
         return $pdo;
     } catch (PDOException $e) {
+        // Log the real reason server-side; never leak DB internals to clients.
+        error_log('DB connection failed: ' . $e->getMessage());
         http_response_code(500);
+        header('Content-Type: application/json; charset=UTF-8');
         echo json_encode([
             'success' => false,
-            'error'   => 'Database connection failed: ' . $e->getMessage()
+            'error'   => 'Server is temporarily unavailable. Please try again shortly.'
         ]);
         exit;
     }

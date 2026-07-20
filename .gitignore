@@ -1,3 +1,11 @@
 node_modules/
 .env
 dist/
+
+# Uploaded payment screenshots (keep the folder, not its contents)
+backend/uploads/payments/*
+!backend/uploads/payments/.gitignore
+!backend/uploads/.htaccess
+
+# macOS
+.DS_Store

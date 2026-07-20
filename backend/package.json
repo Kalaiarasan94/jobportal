@@ -1,7 +1,7 @@
 {
-  "name": "jobportal-backend",
+  "name": "malligai-eps-backend",
   "version": "1.0.0",
-  "description": "Job Portal PHP Backend",
+  "description": "Malligai EPS Registration — PHP Backend",
   "scripts": {
     "start": "php -S localhost:5000 -t ."
   }

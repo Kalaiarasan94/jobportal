@@ -2,12 +2,12 @@
 /**
  * API: Admin Login
  * POST /api/admin/login.php
- * 
- * Replaces: app.post('/api/admin/login') from server.ts
- * Handles secure admin credentials verification
+ *
+ * Returns a shared-secret token that every other admin endpoint requires,
+ * either as an X-Admin-Token header or a ?token= query parameter.
  */
 
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../config/app.php';
 require_once __DIR__ . '/../../config/cors.php';
 
 setCorsHeaders();
@@ -35,11 +35,15 @@ $password = trim($input['password'] ?? '');
 $adminUsername = getenv('ADMIN_USERNAME') ?: 'admin';
 $adminPassword = getenv('ADMIN_PASSWORD') ?: 'hrpass123';
 
-if ($username === $adminUsername && $password === $adminPassword) {
+// hash_equals keeps the comparison timing-independent.
+$ok = hash_equals($adminUsername, $username) && hash_equals($adminPassword, $password);
+
+if ($ok) {
     http_response_code(200);
     echo json_encode([
         'success' => true,
-        'message' => 'Authenticated successfully'
+        'message' => 'Authenticated successfully',
+        'token'   => adminToken()
     ]);
 } else {
     http_response_code(401);

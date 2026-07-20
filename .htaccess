@@ -1,0 +1,22 @@
+# ==========================================================
+# Web-root .htaccess  →  upload to public_html/.htaccess
+#
+# Serves the React single-page app and lets /admin (and any other
+# client-side route) work on direct load / refresh, while leaving the
+# PHP backend under /backend/ untouched.
+# ==========================================================
+
+Options -MultiViews
+RewriteEngine On
+RewriteBase /
+
+# 1. Never rewrite backend requests — let PHP handle them.
+RewriteRule ^backend/ - [L]
+
+# 2. Serve real existing files/folders as-is (index.html, assets, images…).
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 3. Everything else → the SPA entry point (fixes the /admin 404).
+RewriteRule ^ /index.html [L]
